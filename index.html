@@ -381,7 +381,7 @@ async function fetchTable(eid) {
     records = records.concat(data.records || []);
     offset = data.offset;
   } while (offset);
-  return records.map(r => mapRecord(eid, r));
+  return records.map(r => mapRecord(eid, r)).filter(a => a.code && a.code.trim() !== '');
 }
 
 function mapRecord(eid, r) {
