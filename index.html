@@ -375,7 +375,8 @@ async function fetchTable(eid) {
   const tbl = TABLES[eid];
   let records = [], offset = null;
   do {
-    const url = BASE_ID + '/' + tbl.id + (offset ? '?offset=' + offset : '');
+    let url = BASE_ID + '/' + tbl.id + '?returnFieldsByFieldId=true';
+    if (offset) url += '&offset=' + offset;
     const data = await airFetch(url);
     records = records.concat(data.records || []);
     offset = data.offset;
