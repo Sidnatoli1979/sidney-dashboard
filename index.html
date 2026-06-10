@@ -252,6 +252,57 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 /* BODY LIGHT */
 body.light{--bg:#F4F4F8;--bg2:#FFF;--bg3:#EBEBF0;--bg4:#E0E0EA;--bg5:#D4D4E0;--border:rgba(0,0,0,.07);--border2:rgba(0,0,0,.13);--border3:rgba(0,0,0,.2);--text:#1A1A2E;--text2:#555;--text3:#888;--text4:#BBB}
 .empty{text-align:center;padding:40px;color:var(--text3);font-size:12px}
+/* NOTES */
+.note-inp{width:100%;background:var(--bg4);border:1px solid var(--border);border-radius:var(--rs);padding:6px 10px;font-size:11px;color:var(--text);outline:none;resize:none;font-family:'Inter',sans-serif;line-height:1.5}
+.note-inp:focus{border-color:var(--border2)}
+.note-inp::placeholder{color:var(--text3)}
+.note-tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;cursor:pointer;border:none;white-space:nowrap}
+.note-active{background:rgba(245,158,11,.15);color:#F59E0B;border:1px solid rgba(245,158,11,.3)}
+.note-inactive{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.note-star{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+/* HISTORY */
+.hist-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:13px 15px;margin-bottom:8px;display:flex;align-items:center;gap:12px;transition:border-color .15s}
+.hist-card:hover{border-color:var(--border2)}
+.hist-week{font-size:12px;font-weight:700;min-width:140px}
+.hist-date{font-size:10px;color:var(--text3)}
+.hist-val{font-size:18px;font-weight:800;min-width:40px;text-align:right}
+.hist-delta{font-size:10px;font-weight:600;padding:2px 6px;border-radius:6px}
+.hist-up{background:var(--green-dim);color:var(--green)}
+.hist-down{background:var(--red-dim);color:var(--red)}
+.hist-same{background:var(--bg5);color:var(--text3)}
+/* SEARCH GLOBAL */
+.global-search-wrap{position:relative;margin-bottom:16px}
+.global-search{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:10px 14px 10px 36px;font-size:13px;color:var(--text);outline:none;font-family:'Inter',sans-serif;transition:border-color .2s}
+.global-search:focus{border-color:var(--border3)}
+.global-search::placeholder{color:var(--text3)}
+.global-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px;pointer-events:none}
+.search-results{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);overflow:hidden;max-height:360px;overflow-y:auto}
+.search-result{padding:10px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s}
+.search-result:hover{background:var(--bg3)}
+.search-result:last-child{border-bottom:none}
+.sr-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.sr-name{font-size:13px;font-weight:600;flex:1}
+.sr-meta{font-size:10px;color:var(--text3)}
+/* FILTER TABS */
+.filter-tabs{display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap}
+.filter-tab{font-size:11px;font-weight:600;padding:5px 12px;border-radius:20px;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--text3);transition:all .15s}
+.filter-tab:hover{border-color:var(--border2);color:var(--text2)}
+.filter-tab.active{background:var(--bg5);color:var(--text);border-color:var(--border2)}
+.filter-tab.f-red.active{background:var(--red-dim);color:var(--red);border-color:rgba(239,68,68,.3)}
+.filter-tab.f-yellow.active{background:var(--yellow-dim);color:var(--yellow);border-color:rgba(245,158,11,.3)}
+.filter-tab.f-green.active{background:var(--green-dim);color:var(--green);border-color:rgba(34,197,94,.3)}
+/* ONBOARDING */
+.onboard-step{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.onboard-step:last-child{border-bottom:none}
+.onboard-num{width:26px;height:26px;border-radius:50%;background:var(--lc);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.onboard-title{font-size:13px;font-weight:600;margin-bottom:3px}
+.onboard-desc{font-size:11px;color:var(--text2);line-height:1.6}
+.onboard-code{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--bg4);padding:2px 6px;border-radius:var(--rx);color:var(--text)}
+/* SORT */
+.sortable{cursor:pointer;user-select:none}
+.sortable:hover{color:var(--text)}
+.sort-asc::after{content:' ▲';font-size:8px}
+.sort-desc::after{content:' ▼';font-size:8px}
 @media(max-width:700px){.sb{display:none}.kpi-grid{grid-template-columns:1fr 1fr}.perso-layout{grid-template-columns:1fr}.content{padding:14px}.ann-grid{grid-template-columns:1fr}.export-grid{grid-template-columns:1fr}.grid-2,.grid-3{grid-template-columns:1fr}}
 </style>
 </head>
@@ -353,9 +404,11 @@ async function fetchTable(eid){
 }
 function mapRecord(eid,r){
   const f=TABLES[eid].fields;
+  const notes = JSON.parse(ls('notes_'+r.id)||'{}');
   return{_id:r.id,_eid:eid,prenom:r.fields[f.prenom]||'',nom:r.fields[f.nom]||'',
     code:r.fields[f.code]||'',tel:r.fields[f.tel]||'',insta:r.fields[f.insta]||'',
-    ecole:f.ecole?(r.fields[f.ecole]||''):'',ventes:f.ventes?(r.fields[f.ventes]||0):0};
+    ecole:f.ecole?(r.fields[f.ecole]||''):'',ventes:f.ventes?(r.fields[f.ventes]||0):0,
+    note:notes.text||'',tag:notes.tag||''};
 }
 async function syncAll(){
   setSyncStatus('syncing');document.getElementById('syncBtn').textContent='↻ Sync...';
@@ -426,6 +479,8 @@ function buildSidebar(){
   h+=`<button class="sb-item${currentPage==='relances'?' active':''}" onclick="nav('relances')"><div class="sb-dot" style="background:var(--red)"></div>Relances<span class="sb-cnt" style="color:var(--red)">${Object.keys(TABLES).reduce((s,k)=>s+DATA[k].filter(a=>(a.ventes||0)<TABLES[k].obj).length,0)}</span></button>`;
   h+=`<button class="sb-item${currentPage==='lancement'?' active':''}" onclick="nav('lancement')"><div class="sb-dot" style="background:var(--green)"></div>Lancement semaine</button>`;
   h+=`<button class="sb-item${currentPage==='annuaire'?' active':''}" onclick="nav('annuaire')"><div class="sb-dot" style="background:var(--text3)"></div>Annuaire<span class="sb-cnt">${DATA.lc.length+DATA.ne.length+DATA.ws.length}</span></button>`;
+  h+=`<button class="sb-item${currentPage==='historique'?' active':''}" onclick="nav('historique')"><div class="sb-dot" style="background:#6366F1"></div>Historique</button>`;
+  h+=`<button class="sb-item${currentPage==='aide'?' active':''}" onclick="nav('aide')"><div class="sb-dot" style="background:var(--text3)"></div>Aide & partage</button>`;
   h+='<div class="sb-sec">Soirées</div>';
   eids.forEach(k=>{const t=TABLES[k];h+=`<button class="sb-item${currentPage===k?' active':''}" onclick="nav('${k}')"><div class="sb-dot" style="background:${t.color};box-shadow:0 0 8px ${t.color}66"></div>${t.name}<span class="sb-cnt">${DATA[k].length}</span></button>`;});
   nav.innerHTML=h;
@@ -439,6 +494,8 @@ function renderPage(page){
   else if(page==='relances'){t.textContent='Relances';s.textContent='Ambassadeurs en dessous de l\'objectif';c.innerHTML=renderRelances();}
   else if(page==='lancement'){t.textContent='Lancement semaine';s.textContent='Prépare ta communication du dimanche';c.innerHTML=renderLancement();}
   else if(page==='annuaire'){t.textContent='Annuaire';s.textContent='Tous les ambassadeurs';c.innerHTML=renderAnnuaire();bindAnnuaire();}
+  else if(page==='historique'){t.textContent='Historique';s.textContent='Évolution semaine par semaine';c.innerHTML=renderHistorique();}
+  else if(page==='aide'){t.textContent='Aide & partage';s.textContent='Guide de connexion pour tes collabs';c.innerHTML=renderAide();}
   else if(TABLES[page]){const ev=TABLES[page];t.textContent=ev.name;s.textContent=ev.date+(ev.venue?' · '+ev.venue:'');c.innerHTML=renderEventPage(page);initEventPage(page);}
 }
 
@@ -499,7 +556,7 @@ function renderDashboard(){
   });
   classement+='</tbody></table></div>';
 
-  return kpis+soirees+classement;
+  return renderGlobalSearch()+kpis+soirees+classement;
 }
 
 // ═══════════ RELANCES ═══════════
@@ -531,6 +588,13 @@ function selectRelanceEv(eid){
     return header+`<div class="alert alert-ok">✅ Tous les ambassadeurs de ${t.name} ont atteint leur objectif de ${t.obj} ventes !</div>`;
   }
 
+  // Filter tabs
+  const filterHtml=`<div class="filter-tabs" id="rl-filters-${eid}">
+    <button class="filter-tab active" onclick="filterRelances('${eid}','all',this)">Tous (${under.length})</button>
+    <button class="filter-tab f-red" onclick="filterRelances('${eid}','zero',this)">0 vente (${under.filter(a=>(a.ventes||0)===0).length})</button>
+    <button class="filter-tab f-yellow" onclick="filterRelances('${eid}','low',this)">En cours (${under.filter(a=>(a.ventes||0)>0).length})</button>
+    <button class="filter-tab f-green" onclick="filterRelances('${eid}','star',this)">⭐ Top (${under.filter(a=>a.tag==='star').length})</button>
+  </div>`;
   const rows=under.map(a=>{
     const s=a.ventes||0;const missing=t.obj-s;const col=evColor(eid);
     const initStr=initials(a)||'?';
@@ -550,7 +614,7 @@ function selectRelanceEv(eid){
     </div>`;
   }).join('');
 
-  return header+`<div class="relance-list">${rows}</div>`;
+  return header+filterHtml+`<div class="relance-list" id="rl-list-${eid}">${rows}</div>`;
 }
 function makeRelanceMsg(eid,a){
   const t=TABLES[eid];const s=a.ventes||0;const missing=t.obj-s;
@@ -562,6 +626,21 @@ function makeRelanceMsg(eid,a){
 function cpRelance(ambId,eid,btn){
   const a=DATA[eid].find(x=>x._id===ambId);if(!a)return;
   cp(makeRelanceMsg(eid,a),()=>{btn.textContent='✓';btn.classList.add('ok');setTimeout(()=>{btn.textContent='📱 Copier message';btn.classList.remove('ok')},2000);toast('✓ Message copié');});
+}
+function filterRelances(eid, filter, btn) {
+  btn.closest('.filter-tabs').querySelectorAll('.filter-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const list=document.getElementById('rl-list-'+eid); if(!list) return;
+  list.querySelectorAll('.relance-row').forEach(row=>{
+    const code=row.querySelector('.mono')?.textContent||'';
+    const a=DATA[eid].find(x=>x.code===code);if(!a)return;
+    const s=a.ventes||0;
+    let show=true;
+    if(filter==='zero') show=s===0;
+    else if(filter==='low') show=s>0;
+    else if(filter==='star') show=a.tag==='star';
+    row.style.display=show?'':'none';
+  });
 }
 function copyAllRelances(eid){
   const t=TABLES[eid];const under=DATA[eid].filter(a=>(a.ventes||0)<t.obj);
@@ -680,6 +759,7 @@ function renderAnnuaire(filter=''){
   const cards=list.map(a=>{
     const eids=a._eids;const col=evColor(eids[0]);
     const tags=eids.map(k=>`<span class="ev-tag" style="background:${evColor(k)}22;color:${evColor(k)}">${TABLES[k].name}</span>`).join('');
+    const noteTagHtml = a.tag ? `<span class="note-tag ${a.tag==='star'?'note-star':a.tag==='active'?'note-active':'note-inactive'} " style="position:absolute;top:9px;left:9px;font-size:9px">${a.tag==='star'?'⭐ Top':a.tag==='active'?'🔥 Actif':'💤 Inactif'}</span>` : '';
     const codes=eids.map(k=>{const d=DATA[k].find(x=>x._id===a._id||(x.tel===a.tel&&x.prenom===a.prenom));return d?`<div class="amb-info"><span>${TABLES[k].name.split(' ')[0]}:</span><span class="v">${d.code}</span></div>`:''}).join('');
     return `<div class="amb-card">
       <div class="amb-actions"><button class="btn" style="font-size:10px;padding:3px 8px" onclick="editAmb('${a._eid}','${a._id}')">✏️</button><button class="btn-danger" onclick="delAmb('${a._eid}','${a._id}','${fullName(a)}')">✕</button></div>
@@ -688,6 +768,8 @@ function renderAnnuaire(filter=''){
       ${a.tel?`<div class="amb-info">📞 <span class="v">${a.tel}</span></div>`:''}
       ${a.insta?`<div class="amb-info">📸 <span class="v">@${a.insta}</span></div>`:''}
       ${codes}
+      ${a.note?`<div class="amb-info" style="margin-top:5px;font-style:italic;color:var(--text3)">💬 ${a.note.slice(0,50)}${a.note.length>50?'...':''}</div>`:''}
+      ${noteTagHtml}
     </div>`;
   }).join('')||'<div class="empty">Aucun résultat.</div>';
   return `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><input class="search-inp" id="ann-s" placeholder="Rechercher..." value="${filter}" oninput="filterAnnuaire()" style="width:230px"><span style="font-size:11px;color:var(--text3)">${list.length} ambassadeurs</span></div><div class="ann-grid">${cards}</div>`;
@@ -753,7 +835,7 @@ function renderRanking(eid){
     <td><input type="number" class="sales-inp" value="${s}" min="0" onchange="updateVentes('${eid}','${a._id}',this.value)" title="Modifier"></td>
     <td><button class="btn" style="font-size:10px;padding:3px 8px" onclick="cpRelance('${a._id}','${eid}',this)">📱</button></td></tr>`;
   }).join('');
-  return top+`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>#</th><th>Ambassadeur</th><th>Progression</th><th>Statut</th><th>Ventes</th><th>Relance</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  return top+`<div class="tbl-wrap"><table class="tbl" id="rank-tbl-${eid}"><thead><tr><th>#</th><th class="sortable" onclick="sortRank('${eid}','name',this)">Ambassadeur</th><th>Progression</th><th class="sortable" onclick="sortRank('${eid}','status',this)">Statut</th><th class="sortable" onclick="sortRank('${eid}','ventes',this)">Ventes</th><th>Relance</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
 // ── PERSO ──
@@ -785,6 +867,7 @@ function showPerso(eid,recId){
     <div class="psec-msg" id="pms-${eid}-${recId}">${short}</div>
     <div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button class="btn" onclick="cpEl('pms-${eid}-${recId}',this)">Copier</button></div>
     ${!met2?`<div class="psec-lbl">Message de relance</div><div class="psec-msg" id="pmr-${eid}-${recId}">${relance}</div><div style="display:flex;justify-content:flex-end"><button class="btn" onclick="cpEl('pmr-${eid}-${recId}',this)">Copier</button></div>`:''}
+    ${renderNoteWidget(a)}
   </div>`;
 }
 
@@ -802,7 +885,195 @@ function exportCodes(eid){cp(DATA[eid].map(a=>a.code).join('\n'),()=>toast('✓ 
 function exportCSV(eid){const l=['Prénom,Nom,Téléphone,Instagram,École,Code,Ventes'];DATA[eid].forEach(a=>l.push([a.prenom,a.nom,a.tel,a.insta,a.ecole,a.code,a.ventes||0].map(v=>'"'+(v||'')+'"').join(',')));cp(l.join('\n'),()=>toast('✓ CSV copié'));}
 function exportMsgs(eid){const t=TABLES[eid],man=isManual(eid);const msgs=DATA[eid].map(a=>{const link=makeLink(eid,a.code);return man?`Salut ${a.prenom} 👋\nTon code ${t.name} : ${a.code}\nLien : ${t.base()}\nMerci 🔥`:`Salut ${a.prenom} 👋\nTon lien ${t.name} :\n👉 ${link}\nMerci 🔥`;}).join('\n\n---\n\n');cp(msgs,()=>toast('✓ '+DATA[eid].length+' messages copiés'));}
 
+// ── NOTES ──
+function saveNote(ambId, text, tag) {
+  ls('notes_'+ambId, JSON.stringify({text, tag}));
+  // update in DATA
+  Object.keys(DATA).forEach(k => { const a=DATA[k].find(x=>x._id===ambId); if(a){a.note=text;a.tag=tag;} });
+  toast('✓ Note sauvegardée');
+}
+function renderNoteWidget(a) {
+  const tags = [
+    {key:'star', label:'⭐ Top', cls:'note-star'},
+    {key:'active', label:'🔥 Actif', cls:'note-active'},
+    {key:'inactive', label:'💤 Inactif', cls:'note-inactive'}
+  ];
+  const tagBtns = tags.map(t => `<button class="note-tag ${t.cls}${a.tag===t.key?' ':('' )}" style="opacity:${a.tag===t.key?1:0.4}" onclick="setNoteTag('${a._id}','${t.key}','${a._eid}')">${t.label}</button>`).join('');
+  return `<div style="margin-top:10px">
+    <div class="psec-lbl">Note & tag</div>
+    <div style="display:flex;gap:6px;margin-bottom:7px;flex-wrap:wrap">${tagBtns}</div>
+    <textarea class="note-inp" id="note-${a._id}" rows="2" placeholder="Note personnelle (visible uniquement par toi)...">${a.note||''}</textarea>
+    <div style="display:flex;justify-content:flex-end;margin-top:5px"><button class="btn" onclick="saveNote('${a._id}',document.getElementById('note-${a._id}').value,'${a.tag||''}')">Sauvegarder note</button></div>
+  </div>`;
+}
+function setNoteTag(ambId, tag, eid) {
+  const a = Object.keys(DATA).flatMap(k=>DATA[k]).find(x=>x._id===ambId);
+  if(!a) return;
+  const newTag = a.tag === tag ? '' : tag;
+  saveNote(ambId, a.note||'', newTag);
+  // re-render perso panel
+  showPerso(eid, ambId);
+}
+
+// ── HISTORIQUE ──
+function saveHistEntry(eid, label) {
+  const entries = JSON.parse(ls('hist_'+eid)||'[]');
+  const ts = totalSales(eid); const met = metObj(eid); const cnt = DATA[eid].length;
+  entries.unshift({date: new Date().toLocaleDateString('fr-FR'), label: label||('Semaine du '+new Date().toLocaleDateString('fr-FR')), ventes: ts, met, cnt, ts: Date.now()});
+  ls('hist_'+eid, JSON.stringify(entries.slice(0,52)));
+  toast('✓ Snapshot sauvegardé');
+}
+function renderHistorique() {
+  const eids = Object.keys(TABLES);
+  const evSelBtns = eids.map(k=>`<button class="btn" id="hi-sel-${k}" onclick="selectHistEv('${k}')" style="border-color:${evColor(k)}44">${TABLES[k].name}</button>`).join('');
+  setTimeout(()=>selectHistEv('lc'), 0);
+  return `<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">${evSelBtns}</div><div id="hi-content"></div>`;
+}
+function selectHistEv(eid) {
+  document.querySelectorAll('[id^="hi-sel-"]').forEach(b=>b.classList.remove('ok'));
+  const sb=document.getElementById('hi-sel-'+eid); if(sb) sb.classList.add('ok');
+  const t = TABLES[eid];
+  const entries = JSON.parse(ls('hist_'+eid)||'[]');
+  const snapBtn = `<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+    <input class="search-inp" id="hist-label-${eid}" placeholder="Label (ex: Semaine 11 juin)" style="flex:1">
+    <button class="btn-primary" style="--ev-col:${t.color}" onclick="saveHistEntry('${eid}',document.getElementById('hist-label-${eid}').value);selectHistEv('${eid}')">📸 Snapshot maintenant</button>
+  </div>`;
+  if(!entries.length) {
+    document.getElementById('hi-content').innerHTML = snapBtn + `<div class="empty"><div style="font-size:28px;opacity:.3">📊</div><p>Aucun historique pour ${t.name}.<br>Clique sur "Snapshot" après chaque soirée pour sauvegarder les stats.</p></div>`;
+    return;
+  }
+  const rows = entries.map((e,i) => {
+    const prev = entries[i+1];
+    const delta = prev ? e.ventes - prev.ventes : null;
+    const deltaBadge = delta === null ? '' : delta > 0 ? `<span class="hist-delta hist-up">+${delta}</span>` : delta < 0 ? `<span class="hist-delta hist-down">${delta}</span>` : `<span class="hist-delta hist-same">±0</span>`;
+    const pct = e.cnt ? Math.round(e.met/e.cnt*100) : 0;
+    return `<div class="hist-card">
+      <div><div class="hist-week">${e.label}</div><div class="hist-date">${e.date}</div></div>
+      <div class="prog-bar-wrap" style="width:120px"><div class="prog-bar-fill" style="width:${Math.min(100,e.ventes/Math.max(1,...entries.map(x=>x.ventes))*100)}%;background:${t.color}"></div></div>
+      <div class="hist-val" style="color:${t.color}">${e.ventes}</div>
+      <div style="font-size:10px;color:var(--text3)">ventes</div>
+      ${deltaBadge}
+      <div style="font-size:10px;color:var(--text3)">${e.met}/${e.cnt} objectifs</div>
+      <div style="font-size:10px;color:${pct>=80?'var(--green)':pct>=50?'var(--yellow)':'var(--red)'};font-weight:700">${pct}%</div>
+      <button class="btn" style="font-size:10px;padding:2px 7px;margin-left:auto" onclick="deleteHist('${eid}',${i})">✕</button>
+    </div>`;
+  }).join('');
+  // Chart simple
+  const maxV = Math.max(...entries.map(e=>e.ventes), 1);
+  const bars = [...entries].reverse().map(e => {
+    const h = Math.round(e.ventes/maxV*60);
+    return `<div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1">
+      <div style="font-size:9px;color:var(--text3)">${e.ventes}</div>
+      <div style="height:${h}px;min-height:2px;background:${t.color};border-radius:2px 2px 0 0;width:100%;max-width:24px"></div>
+      <div style="font-size:8px;color:var(--text3);writing-mode:vertical-rl;transform:rotate(180deg);max-height:50px;overflow:hidden">${e.label.split(' ').slice(-2).join(' ')}</div>
+    </div>`;
+  }).join('');
+  const chart = entries.length > 1 ? `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:14px">
+    <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:10px;text-transform:uppercase;letter-spacing:.07em">Évolution des ventes</div>
+    <div style="display:flex;align-items:flex-end;gap:4px;height:80px;padding:0 4px">${bars}</div>
+  </div>` : '';
+  document.getElementById('hi-content').innerHTML = snapBtn + chart + rows;
+}
+function deleteHist(eid, idx) {
+  const entries = JSON.parse(ls('hist_'+eid)||'[]');
+  entries.splice(idx,1);
+  ls('hist_'+eid, JSON.stringify(entries));
+  selectHistEv(eid);
+  toast('✓ Supprimé');
+}
+
+// ── AIDE & PARTAGE ──
+function renderAide() {
+  return `<div style="max-width:600px">
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:16px">
+      <div style="font-size:15px;font-weight:700;margin-bottom:4px">Partage Sidney avec tes collabs</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:14px">Envoie-leur le lien + ce guide. Chacun crée son propre token Airtable — les données sont partagées en temps réel.</div>
+      <div style="display:flex;align-items:center;gap:8px;background:var(--bg4);border:1px solid var(--border2);border-radius:var(--rs);padding:10px 13px;margin-bottom:10px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;flex:1;color:var(--text)">https://dashboardlng.netlify.app</span>
+        <button class="btn" onclick="cp('https://dashboardlng.netlify.app',()=>toast('✓ Lien copié'))">Copier</button>
+      </div>
+      <button class="btn-primary" style="--ev-col:var(--lc)" onclick="cp(getOnboardingMsg(),()=>toast('✓ Message copié'))">📱 Copier le message à envoyer</button>
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:20px">
+      <div style="font-size:13px;font-weight:700;margin-bottom:14px">Guide de connexion pour tes collabs</div>
+      <div class="onboard-step">
+        <div class="onboard-num">1</div>
+        <div><div class="onboard-title">Ouvrir le dashboard</div><div class="onboard-desc">Va sur <strong>dashboardlng.netlify.app</strong> dans ton navigateur.</div></div>
+      </div>
+      <div class="onboard-step">
+        <div class="onboard-num">2</div>
+        <div><div class="onboard-title">Créer ton token Airtable</div><div class="onboard-desc">Va sur <strong>airtable.com/create/tokens</strong><br>→ Clique <strong>"+ Create new token"</strong><br>→ Nom : <span class="onboard-code">Sidney</span><br>→ Coche les permissions : <span class="onboard-code">data.records:read</span>, <span class="onboard-code">data.records:write</span>, <span class="onboard-code">schema.bases:read</span><br>→ Dans "Add a base" : sélectionne <span class="onboard-code">LNG</span><br>→ Clique <strong>"Create token"</strong> et copie-le</div></div>
+      </div>
+      <div class="onboard-step">
+        <div class="onboard-num">3</div>
+        <div><div class="onboard-title">Se connecter</div><div class="onboard-desc">Colle ton token dans le champ de connexion de Sidney. Le token commence par <span class="onboard-code">pat...</span></div></div>
+      </div>
+      <div class="onboard-step">
+        <div class="onboard-num">4</div>
+        <div><div class="onboard-title">Synchroniser</div><div class="onboard-desc">Clique sur <strong>↻ Synchroniser</strong> dans la sidebar pour charger les données. Refais-le quand un collègue a fait des modifications.</div></div>
+      </div>
+    </div>
+  </div>`;
+}
+function getOnboardingMsg() {
+  return `Hey 👋
+
+Voici le dashboard Sidney pour gérer nos ambassadeurs en temps réel :
+👉 https://dashboardlng.netlify.app
+
+Pour te connecter :
+1. Va sur airtable.com/create/tokens
+2. Crée un token avec ces permissions : data.records:read, data.records:write, schema.bases:read
+3. Ajoute la base LNG
+4. Copie le token et colle-le dans Sidney
+
+Tu peux voir et modifier les ambassadeurs, les ventes, les relances — tout est synchronisé en temps réel 🔥`;
+}
+
+// ── GLOBAL SEARCH ──
+function renderGlobalSearch() {
+  return `<div class="global-search-wrap">
+    <span class="global-search-icon">🔍</span>
+    <input class="global-search" id="global-s" placeholder="Rechercher un ambassadeur, un code..." oninput="doGlobalSearch()" autocomplete="off">
+    <div id="global-results" style="display:none;margin-top:6px" class="search-results"></div>
+  </div>`;
+}
+function doGlobalSearch() {
+  const f = document.getElementById('global-s').value.trim().toLowerCase();
+  const res = document.getElementById('global-results');
+  if(!f || f.length < 2) { res.style.display='none'; return; }
+  const all = Object.keys(DATA).flatMap(k=>DATA[k].map(a=>({...a,_eid:k})));
+  const found = all.filter(a=>(fullName(a)+' '+a.code+' '+(a.insta||'')+' '+(a.tel||'')).toLowerCase().includes(f)).slice(0,8);
+  if(!found.length){ res.innerHTML='<div style="padding:12px;font-size:11px;color:var(--text3)">Aucun résultat</div>';res.style.display='block';return; }
+  const t=TABLES;
+  res.innerHTML=found.map(a=>`<div class="search-result" onclick="nav('${a._eid}');setTimeout(()=>showPerso('${a._eid}','${a._id}'),500)">
+    <div class="sr-av" style="background:${evColor(a._eid)}22;color:${evColor(a._eid)}">${initials(a)||'?'}</div>
+    <div style="flex:1"><div class="sr-name">${fullName(a)}</div><div class="sr-meta"><span class="mono">${a.code}</span> · ${t[a._eid].name} · ${a.ventes||0} ventes</div></div>
+    ${a.tag?`<span class="note-tag ${a.tag==='star'?'note-star':a.tag==='active'?'note-active':'note-inactive'}">${a.tag==='star'?'⭐':a.tag==='active'?'🔥':'💤'}</span>`:''}
+  </div>`).join('');
+  res.style.display='block';
+}
+// Close search on outside click
+document.addEventListener('click', e=>{ if(!e.target.closest('.global-search-wrap')){ const r=document.getElementById('global-results'); if(r)r.style.display='none'; } });
+
 // ── URL ──
+let sortState={};
+function sortRank(eid, col, th) {
+  const key=eid+'_'+col;
+  sortState[key] = sortState[key]==='asc'?'desc':'asc';
+  th.closest('thead').querySelectorAll('th').forEach(h=>{h.classList.remove('sort-asc','sort-desc');});
+  th.classList.add(sortState[key]==='asc'?'sort-asc':'sort-desc');
+  const tbody=document.querySelector('#rank-tbl-'+eid+' tbody');if(!tbody)return;
+  const rows=[...tbody.querySelectorAll('tr')];
+  rows.sort((a,b)=>{
+    let va,vb;
+    if(col==='name'){va=a.cells[1].textContent.trim();vb=b.cells[1].textContent.trim();return sortState[key]==='asc'?va.localeCompare(vb):vb.localeCompare(va);}
+    if(col==='ventes'){va=parseInt(a.cells[4].querySelector('input')?.value||0);vb=parseInt(b.cells[4].querySelector('input')?.value||0);return sortState[key]==='asc'?va-vb:vb-va;}
+    if(col==='status'){va=a.cells[3].textContent.includes('✓')?2:a.cells[3].textContent.includes('En cours')?1:0;vb=b.cells[3].textContent.includes('✓')?2:b.cells[3].textContent.includes('En cours')?1:0;return sortState[key]==='asc'?va-vb:vb-va;}
+    return 0;
+  });
+  rows.forEach(r=>tbody.appendChild(r));
+}
 function onUrlInput(eid){const v=document.getElementById('url-'+eid)?.value.trim();const h=document.getElementById('url-hint-'+eid);if(!v||!h)return;const b=extractBase(v);if(b){h.innerHTML='<span style="color:var(--green)">✓ </span>'+b+'CODE';document.getElementById('url-'+eid).classList.add('valid');}else{h.innerHTML='<span style="color:var(--red)">Format non reconnu</span>';document.getElementById('url-'+eid).classList.remove('valid');}}
 
 // ═══════════ MODAL AMB ═══════════
